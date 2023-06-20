@@ -1,10 +1,6 @@
 # workflow definition
 name: docker_publisher
 
-env:
-  DOCKERHUB_USERNAME: earneau
-  DOCKERHUB_TOKEN: dckr_pat_Ta31dc4_f5mFt8jDZW5xVZw1QbA
-
 on:
   push:
     branches:
