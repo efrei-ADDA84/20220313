@@ -9,7 +9,7 @@ def get_weather(lat, long):
     api = requests.get(url)     # calling the openweather api
     data = api.json()
 
-    if api.status_code == 200:
+    if api.status_code == 200:  # verifying we have access to the API
         weather = data['weather'][0]['description']     # retrieving weather data
         temperature = data['main']['temp']              # retrieving temperature data
         return f"Weather: {weather}, Temperature: {temperature} K"
