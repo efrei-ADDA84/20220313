@@ -17,7 +17,7 @@ hadolint command returns no error nor warning when executed
 
 Added a Github Actions worflow in .github/workflows. 
 
->- name: login to dockerhub
+>      - name: login to dockerhub
 >        uses: docker/login-action@v1
 >        with:
 >          username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -25,7 +25,7 @@ Added a Github Actions worflow in .github/workflows.
 
 This portion of the code initiates the login to dockerhub. DOCKERHUB_USERNAME and DOCKERHUB_TOKEN are the credentials that have been registered as Github secrets and are freely accessed by the program. 
 
->- name: build and push of docker image
+>      - name: build and push of docker image
 >        uses: docker/build-push-action@v2
 >        with:
 >          push: true
