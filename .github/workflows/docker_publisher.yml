@@ -23,9 +23,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - uses: actions/checkout@v3
       - name: build and push of docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: earneau/weatherapp:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/weatherapp:latest
