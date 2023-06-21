@@ -13,6 +13,11 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+      
+      - name: install Hadolint
+        run: |
+          curl -sL -o /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+          chmod +x /usr/local/bin/hadolint
 
       - name: lint dockerfile
         run: hadolint Dockerfile
