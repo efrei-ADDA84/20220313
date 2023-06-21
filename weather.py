@@ -1,10 +1,13 @@
+from flask import Flask, request, jsonify
+
 import os
 import requests
 
-def get_weather(lat, long):
+app = Flask(__name__)      # creating a flask instance
+
+def get_weather(lat, lon):
     api_key = os.environ.get('API_KEY')      # retrieving the api key from our environment variable
-    print(api_key)
-    url = f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={long}&appid={api_key}'  # link to the openweather api
+    url = f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}'  # link to the openweather api
 
     api = requests.get(url)     # calling the openweather api
     data = api.json()
@@ -15,7 +18,15 @@ def get_weather(lat, long):
         return f"Weather: {weather}, Temperature: {temperature} K"
     else:
         return 'Failed to retrieve data.'
+    
+@app.route('/', methods=['GET'])
+def weather():
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
+    data = get_weather(lat, lon)
+    return jsonify(data)
 
-lat = float(os.environ.get('LAT'))
-long = float(os.environ.get('LONG'))       # retrieving variable from environment variable
-print(get_weather(lat, long))
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8081)
+
+

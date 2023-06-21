@@ -1,14 +1,17 @@
-# Utilisez une image de base appropriée pour votre application
+# image de base
 FROM python:3.9
 
-# Définissez le répertoire de travail dans l'image
+# répertoire de travail de l'image
 WORKDIR /app
 
-# Copiez les fichiers de votre projet dans le répertoire de travail de l'image
+# copier les fichiers du projet dans le répertoire de travail de l'image
 COPY . /app
 
-# Installez les dépendances nécessaires (le cas échéant)
+# argument API key
+ARG API_KEY
+
+# installation des dépendances
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Définissez la commande d'exécution pour votre application
+# commande d'exécution du programme
 CMD [ "python", "weather.py" ]

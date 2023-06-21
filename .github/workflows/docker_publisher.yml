@@ -26,3 +26,4 @@ jobs:
           context: .
           push: true
           tags: earneau/weatherapp:latest
+          environment-variables: API_KEY=${{ secrets.API_KEY }}
