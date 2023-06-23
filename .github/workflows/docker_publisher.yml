@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      
+  
+      # hadolint
       - name: install Hadolint
         run: |
           curl -sL -o /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
@@ -21,15 +22,46 @@ jobs:
 
       - name: lint dockerfile
         run: hadolint Dockerfile
-
-      - name: login to dockerhub
-        uses: docker/login-action@v1
+      
+      - name: 'login to azure'
+        uses: azure/login@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: build and push of docker image
-        uses: docker/build-push-action@v2
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: 'build + push image'
+        uses: azure/docker-login@v1
         with:
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/weatherapp:latest
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build . --file Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220313:weatherapp
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220313:weatherapp
+
+      - name: 'deploying'
+        uses: 'azure/aci-deploy@v1'
+        with:
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+          dns-name-label: devops-20220313
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220313:weatherapp
+          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          name: 20220313
+          location: 'france central'
+          secure-environment-variables: API_KEY=${{ secrets.API_KEY }}
+          ports: 8081
+
+
+      # dockerhub
+      #- name: login to dockerhub
+      #  uses: docker/login-action@v1
+      #  with:
+      #    username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #    password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      #- name: build and push of docker image
+      #  uses: docker/build-push-action@v2
+      #  with:
+      #    push: true
+      #    tags: ${{ secrets.DOCKERHUB_USERNAME }}/weatherapp:latest
