@@ -50,7 +50,7 @@ jobs:
           name: 20220313
           location: 'france central'
           secure-environment-variables: API_KEY=${{ secrets.API_KEY }}
-          ports: 80
+          ports: 8081
 
 
       # dockerhub
